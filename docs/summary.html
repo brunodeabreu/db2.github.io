@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>db2.github.io - 2&nbsp; Summary</title>
+<title>db2.github.io - 2&nbsp; Db2 pureScale build</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,40 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -108,7 +74,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./summary.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Db2 pureScale build</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -148,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./summary.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Db2 pureScale build</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -163,14 +129,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#about-this-doc" id="toc-about-this-doc" class="nav-link active" data-scroll-target="#about-this-doc"><span class="header-section-number">3</span> About this doc</a>
+  <ul class="collapse">
+  <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link" data-scroll-target="#table-of-contents"><span class="header-section-number">3.1</span> Table of Contents</a></li>
+  <li><a href="#lessons-learned" id="toc-lessons-learned" class="nav-link" data-scroll-target="#lessons-learned"><span class="header-section-number">3.2</span> 1. Lessons Learned</a></li>
+  <li><a href="#disks-definition" id="toc-disks-definition" class="nav-link" data-scroll-target="#disks-definition"><span class="header-section-number">3.3</span> 4. Disks definition</a>
+  <ul class="collapse">
+  <li><a href="#os" id="toc-os" class="nav-link" data-scroll-target="#os"><span class="header-section-number">3.3.1</span> OS</a></li>
+  <li><a href="#gpfs" id="toc-gpfs" class="nav-link" data-scroll-target="#gpfs"><span class="header-section-number">3.3.2</span> GPFS</a></li>
+  </ul></li>
+  <li><a href="#pre-installation-check-list" id="toc-pre-installation-check-list" class="nav-link" data-scroll-target="#pre-installation-check-list"><span class="header-section-number">3.4</span> 5. Pre-Installation check list</a></li>
+  <li><a href="#db2-check-list-before-install" id="toc-db2-check-list-before-install" class="nav-link" data-scroll-target="#db2-check-list-before-install"><span class="header-section-number">3.5</span> 6. Db2 check list before install</a></li>
+  <li><a href="#kernel-params" id="toc-kernel-params" class="nav-link" data-scroll-target="#kernel-params"><span class="header-section-number">3.6</span> 7. Kernel params</a></li>
+  <li><a href="#db2-tsmp-and-gpfs-install" id="toc-db2-tsmp-and-gpfs-install" class="nav-link" data-scroll-target="#db2-tsmp-and-gpfs-install"><span class="header-section-number">3.7</span> 8. Db2, TSMP and GPFS install</a></li>
+  <li><a href="#apply-db2-and-tsamp-license" id="toc-apply-db2-and-tsamp-license" class="nav-link" data-scroll-target="#apply-db2-and-tsamp-license"><span class="header-section-number">3.8</span> 9. Apply Db2 and TSAMP license</a></li>
+  <li><a href="#db2-user-and-fenced-creation" id="toc-db2-user-and-fenced-creation" class="nav-link" data-scroll-target="#db2-user-and-fenced-creation"><span class="header-section-number">3.9</span> 10. Db2 user and fenced creation</a></li>
+  <li><a href="#create-memberscf" id="toc-create-memberscf" class="nav-link" data-scroll-target="#create-memberscf"><span class="header-section-number">3.10</span> 11. Create Members/CF</a></li>
+  <li><a href="#dbm-db-and-registry-variable-config" id="toc-dbm-db-and-registry-variable-config" class="nav-link" data-scroll-target="#dbm-db-and-registry-variable-config"><span class="header-section-number">3.11</span> 12. DBM , DB and Registry variable config</a></li>
+  <li><a href="#add-file-systems-and-adjust-ownership" id="toc-add-file-systems-and-adjust-ownership" class="nav-link" data-scroll-target="#add-file-systems-and-adjust-ownership"><span class="header-section-number">3.12</span> 13. Add File systems and adjust ownership</a></li>
+  <li><a href="#post-install" id="toc-post-install" class="nav-link" data-scroll-target="#post-install"><span class="header-section-number">3.13</span> 14. Post-Install</a></li>
+  <li><a href="#config-s3" id="toc-config-s3" class="nav-link" data-scroll-target="#config-s3"><span class="header-section-number">3.14</span> 15. Config S3</a></li>
+  <li><a href="#configure-database-problem-determination-db2pdcfg" id="toc-configure-database-problem-determination-db2pdcfg" class="nav-link" data-scroll-target="#configure-database-problem-determination-db2pdcfg"><span class="header-section-number">3.15</span> 16. Configure Database Problem Determination <code>db2pdcfg</code></a></li>
+  <li><a href="#configure-coredump" id="toc-configure-coredump" class="nav-link" data-scroll-target="#configure-coredump"><span class="header-section-number">3.16</span> 17. Configure Coredump</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Summary</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Db2 pureScale build</span></h1>
 </div>
 
 
@@ -185,15 +179,859 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>In summary, this book has no content whatsoever.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
+<section id="about-this-doc" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> About this doc</h1>
+<p>This document will describe the steps perform to install LAB pureScale database.</p>
+<blockquote class="blockquote">
+<p>The oficial IBM document is <a href="https://www.ibm.com/docs/en/db2/11.5?topic=environment-installing-db2-purescale-linux">Installing a Db2 pureScale environment (Linux)</a>, this document does not have the objective to replace the official IBM document, it was created to help DBAs perofrm the install, any doublt please check the official documentation.</p>
+</blockquote>
+<p>There are also sample of commands that contains names to better understand the command, make sure to replace any special setting on the environment that you are working on.</p>
+<p><br></p>
+<p><br></p>
+<section id="table-of-contents" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="table-of-contents"><span class="header-section-number">3.1</span> Table of Contents</h2>
+<ol type="1">
+<li><p><a href="#1-lessons-learned">lessons learned</a></p></li>
+<li><p><a href="#5-pre-installation-check-list">Pre-installation check list</a></p></li>
+<li><p><a href="#6-db2-check-list-before-install">Db2 check list before install</a></p></li>
+<li><p><a href="#7-kernel-params">Kernel params</a></p></li>
+<li><p><a href="#8-db2-tsmp-and-gpfs-install">Db2, TSAMP and GPFS</a></p></li>
+<li><p><a href="#9-apply-db2-and-tsamp-license">Apply Db2 and TSAMP license</a></p></li>
+<li><p><a href="#10-db2-user-and-fenced-creation">Db2 user and groups creation</a></p></li>
+<li><p><a href="#11-create-memberscf">create members cf</a></p></li>
+<li><p><a href="#12-dbm--db-and-registry-variable-config">DBM, dB and Registry variable config</a></p></li>
+<li><p><a href="#13-add-file-systems-and-adjust-ownership">File ssytem and ownership adjust</a></p></li>
+<li><p><a href="#14-post-install">Post install</a></p></li>
+<li><p><a href="#15-config-s3">Config-s3</a></p></li>
+<li><p><a href="#16-configure-database-problem-determination-db2pdcfg">Configure database problem determination db2pdcfg</a></p></li>
+<li><p><a href="#17-configure-coredump">Configure coredump</a></p></li>
+<li><p><a href="#18-check-and-configure-dbms-parameters">Check and Configure DBMS param</a></p></li>
+<li><p><a href="#19-hadr-config-and-sync">HADR configuration and sync</a></p></li>
+<li><p><a href="#20-backout-steps">Backout step</a></p></li>
+</ol>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="lessons-learned" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="lessons-learned"><span class="header-section-number">3.2</span> 1. Lessons Learned</h2>
+<ul>
+<li><p>Kernel version *5.14.0-284.<strong>75.1.el9_2</strong> is not supported need to be 5.14.0-284.<strong>30.1.el9_2</strong> , if server was delivered with kernel version <strong>75.1.el9_2</strong> below is the steps to fix :</p>
+<pre><code>
+#sudo yum install kernel-5.14.0-284.30.1.el9_2 kernel-headers-5.14.0-284.30.1.el9_2 kernel-devel-5.14.0-284.30.1.el9_2
 
 
+
+#sudo reboot
+
+
+
+#sudo yum autoremove kernel-5.14.0-284.75.1.el9_2.x86_64 kernel-devel-5.14.0-284.75.1.el9_2.x86_64 kernel-modules-5.14.0-284.75.1.el9_2.x86_64 kernel-tools-5.14.0-284.75.1.el9_2.x86_64 kernel-core-5.14.0-284.75.1.el9_2.x86_64
+
+</code></pre></li>
+<li><p>Do not use virtualized RDMA</p></li>
+<li><p>If need two databases as HADR make sure to include the correct HADR port for the second database</p></li>
+</ul>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="disks-definition" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="disks-definition"><span class="header-section-number">3.3</span> 4. Disks definition</h2>
+<p>In this section we going to save the disk definition, all the activities <strong>MUST</strong> be performed in a single server, if you get the /dev/dm-xx information from server A, it can be different from server B, also if the server reboot the numbers will change, this information going to be used to add the file system, so before add new file system need to re-map all the DMs</p>
+<p>Commands :</p>
+<ul>
+<li><p><code>lsblk -a -o NAME,KNAME,SIZE,WWN</code></p></li>
+<li><p><code>multipath -l</code></p></li>
+<li><p><code>lsscsi</code></p></li>
+</ul>
+<section id="os" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="os"><span class="header-section-number">3.3.1</span> OS</h3>
+<table class="table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 16%">
+<col style="width: 11%">
+<col style="width: 36%">
+<col style="width: 8%">
+<col style="width: 15%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>ID</th>
+<th>Device</th>
+<th>Size</th>
+<th>Mount point</th>
+<th>DM</th>
+<th>File system</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>[0:0:0:0]</td>
+<td>/dev/sdc</td>
+<td>300G</td>
+<td>- 4G SWAP <br> - 50G / <br> - 50G /opt <br> - 1G /home <br> - 25G /opt/ibm/db2 <br> - 20G /db2home</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="gpfs" class="level3" data-number="3.3.2">
+<h3 data-number="3.3.2" class="anchored" data-anchor-id="gpfs"><span class="header-section-number">3.3.2</span> GPFS</h3>
+<table class="table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 45%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>FILE SYSTEM NAME</th>
+<th>MOUNT POINT</th>
+<th>Size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>db2dump</td>
+<td>/db2/idns/db2dump</td>
+<td>2T</td>
+</tr>
+<tr class="even">
+<td>db2fs1</td>
+<td>/db2sd</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>dba</td>
+<td>/db2/dba</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>dbbackup1</td>
+<td>/db2/dbdns/dbbackup1</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>dbbackup2</td>
+<td>/db2/dbdns/dbbackup2</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>dbbackup3</td>
+<td>/db2/dbdns/dbbackup3</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>dbbackup4</td>
+<td>/db2/dbdns/dbbackup4</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>dbbackup5</td>
+<td>/db2/dbdns/dbbackup5</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>dbbackup6</td>
+<td>/db2/dbdns/dbbackup6</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>dbdns_data0</td>
+<td>/db2/dbdns/dbdns_data0</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>dbdns_data1</td>
+<td>/db2/dbdns/dbdns_data1</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>dbdns_index0</td>
+<td>/db2/dbdns/dbdns_index0</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>dbdns_index1</td>
+<td>/db2/dbdns/dbdns_index1</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>dbdns_temp</td>
+<td>/db2/dbdns/dbdns_temp</td>
+<td>5T</td>
+</tr>
+<tr class="odd">
+<td>log_act_mirror</td>
+<td>/db2/dbdns/log_act_mirror</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>log_active</td>
+<td>/db2/dbdns/log_active</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>log_archive</td>
+<td>/db2/dbdns/log_archive</td>
+<td>1T</td>
+</tr>
+<tr class="even">
+<td>scripts</td>
+<td>/db2/scripts</td>
+<td>1T</td>
+</tr>
+<tr class="odd">
+<td>work</td>
+<td>/db2/work</td>
+<td>1T</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+</section>
+<section id="pre-installation-check-list" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="pre-installation-check-list"><span class="header-section-number">3.4</span> 5. Pre-Installation check list</h2>
+<p>Ref. :</p>
+<p><a href="https://www.ibm.com/docs/en/db2/11.5?topic=linux-preinstallation-checklist-db2-purescale-feature">Preinstallation checklist for Db2 pureScale Feature (Linux)</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 57%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>All hosts must use the same Linux® distribution: 9.2 (Plow)</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Check/validate RDMA <br> <code>On db2-1 run "rping -v -s" and on  db2-2 run "rping -v -c -a 192.168.242.7"</code> <br> <strong>Obs.:</strong> <em>db2prereqcheck will also validate this step</em></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Check <code>log_mtts_per_seg</code> on CF <br> <strong>obs.:</strong> <em>According linux we are using DX-6 cards not need</em></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Check Libs : <br> <code>ls -ld /usr/lib/libstdc++.so.6</code> <br> <code>ls -ld /usr/lib64/libstdc++.so.6*</code> <br> <strong>Obs.:</strong> <em>If not installed will be installed with packages on next section</em></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Check OpenSSD : <br> <code>sudo systemctl status sshd</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Validate SSH between hosts (root) <br> <strong>Obs.:</strong> <em>db2prereqcheck will also validate this step</em></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>List and document devices/disks: <br> <code>lsscsi</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>List multpath <br> <code>multipath -l</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Check Network Adapters installed on all servers : <br> <code>netstat -i</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Check: /tmp, / , /home, /db2home, /var</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>Check ulimit file system and umask 022 for root : <br> <code>id root; ulimit -f; umask</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Check instance and fenced userid and groups</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>Check Kernel setting on WTC and validate on new server</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td>Check DMs and disks <code>lsblk -a -o NAME,KNAME,SIZE,WWN</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="db2-check-list-before-install" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="db2-check-list-before-install"><span class="header-section-number">3.5</span> 6. Db2 check list before install</h2>
+<p>Ref.: <a href="https://www.ibm.com/docs/en/db2/11.5?topic=idpel-installing-db2-purescale-feature-using-db2-install-command">Installing Db2 pureScale Feature using the db2_install command</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 57%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Send db2 binary to server <br> <code>scp special_46591_v11.5.9_linuxx64_universal_fixpack.tar.gz</code> user@db2-2.fsc.customer.com:/tmp</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Create install and log dir : <br> <code>mkdir -p /opt/db2_installer/log</code> <br> <code>mkdir -p /opt/db2_installer</code> <br> <code>mkdir -p /opt/db2_installer/license</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Copy file to db2_installer path : <br> <code>cp /tmp/special_46591_v11.5.9_linuxx64_universal_fixpack.tar.gz /opt/db2_installer</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Extract bin : <br> <code>sudo gunzip -c special_46591_v11.5.9_linuxx64_universal_fixpack.tar.gz \| sudo tar -pxvf -</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Install libs : <br> <code>yum install -y libstdc++.i686 libstdc++ libstdc++-devel.i686 libstdc++-devel pam-devel pam-devel.i686 gcc cpp gcc-c++ kernel-devel NetworkManager-config-server perl mksh "compat-openssl*" kernel-modules-extra</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Run basic check : <br> <code>db2prereqcheck -p -v 11.5.9.0 -o /opt/db2_installer/log/db2prereqcheck_baisc_report_$HOSTNAME.out</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>Run basic precheck all hosts : <br><code>db2prereqcheck -p -v 11.5.9.0 -hl db2-1,db2-2,db2-3,db2-4,db2-5,db2-6,db2-7 -o /opt/db2_installer/log/db2prereqcheck_report_ALL_$HOSTNAME.out</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Run ping tests : <br> <code>db2prereqcheck -p -v 11.5.9.0 -nm db2-1-ib0,db2-2-ib0,db2-3-ib0,db2-4-ib0,db2-5-ib0,db2-6-ib0,db2-7-ib0   -o /opt/db2_installer/log/db2prereqcheck_report_Ping_tests_$HOSTNAME.out</code> <br> <strong>Obs:</strong> <em>The Warning DBT3588W is not applicable</em></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>Run complete pre-check : <br> <code>db2prereqcheck -p -v 11.5.9.0   -hl db2-1,db2-2,db2-3,db2-4,db2-5,db2-6,db2-7 -nm db2-1-ib0,db2-2-ib0,db2-3-ib0,db2-4-ib0,db2-5-ib0,db2-6-ib0,db2-7-ib0   -o /opt/db2_installer/log/db2prereqcheck_report_Complete_$HOSTNAME.out</code> <br> <strong>Note:</strong> <em>The Warning DBT3588W is not applicable</em></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="kernel-params" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="kernel-params"><span class="header-section-number">3.6</span> 7. Kernel params</h2>
+<p>The kernel parameters are documented on [Kernel parameter requirements (Linux)</p>
+<p>](https://www.ibm.com/docs/en/db2/11.5?topic=unix-kernel-parameter-requirements-linux), the new servers should be created with the proper config, if need to change or set please check #3.</p>
+<p>Optional command <code>ipcs -l</code></p>
+<table class="table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 87%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Validate the purescale kernel config file <code>vim /etc/sysctl.d/purescale.conf</code> and add : <br> <code>#https://www.ibm.com/docs/en/db2/11.5?topic=unix-kernel-parameter-requirements-linux</code> <br> <code>#Kernel setting for db2 pureScale environment</code> <br> <code>kernel.shmmni = 32768</code> <br> <code>kernel.msgmni = 32768</code> <br> <code>kernel.sem = 250 32000 32 32768</code> <br> <code>vm.swappiness = 5</code> <br> <code>vm.force_cgroup_v2_swappiness = 1</code> <br> <code>kernel.core_pattern=/db2/work/DUMP/OS/db2-1/core_%e_%p_%h_%t</code> <br> <code>fs.suid_dumpable=2</code> <br></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Check the paramters : <br> <code>sysctl -a \| egrep -i 'mni\|sem '</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>If need to change or add the command to activate the kernel is : <br> <code>sysctl -p /etc/sysctl.d/purescale.conf</code> <br> <code>reboot</code></td>
+<td><span style="color:green"><em>NA</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="db2-tsmp-and-gpfs-install" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="db2-tsmp-and-gpfs-install"><span class="header-section-number">3.7</span> 8. Db2, TSMP and GPFS install</h2>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Run db2_install : <br> <code>db2_install -b /opt/ibm/db2/V11.5.9.0.SB46591 -f PURESCALE -p SERVER -f NOPCMK -t /opt/db2_installer/log/db2_install.trc -l /opt/db2_installer/log/db2_install.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>run db2 install validation : <br> <code>db2val -o -t /opt/db2_installer/log/trace_db2val.trc -l /opt/db2_installer/log/trace_db2val.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Check TSAMP install : <br> <code>rpm -aq \| grep -e "sam\." -e "sam\-"</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Check GPFS install : : <br> <code>rpm -aq \| grep gpfs</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="apply-db2-and-tsamp-license" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="apply-db2-and-tsamp-license"><span class="header-section-number">3.8</span> 9. Apply Db2 and TSAMP license</h2>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Sent license files to servers : <br> <code>/db2/dba/license $ scp *.lic user@db2-4.fsc.customer.com:/opt/db2_installer/license</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Apply Db2 license - <strong>as instance</strong> – must apply to each host : <br> <code>db2licm -a /opt/db2_installer/license/db2aese_c.lic</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Apply TSAMP license - <strong>as root</strong> : <br> <code>/usr/bin/samlicm -i /opt/db2_installer/license/sam41.lic</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Validate db2 , TSAMP and GPFS lic : <br> <strong>Db2</strong> : <code>db2licm -l</code> <br> <strong>GPFS</strong> : <code>/usr/lpp/mmfs/bin/mmlslicense -L</code> <br> <strong>TSAMP</strong> :<code>samlicm -s</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="db2-user-and-fenced-creation" class="level2" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="db2-user-and-fenced-creation"><span class="header-section-number">3.9</span> 10. Db2 user and fenced creation</h2>
+<p>In this section we going to create, user ids and gorups, you <strong>have</strong> to make sure the same config on WTC going to be replicate to CoLo, i.e, user and group names, user and group IDs.</p>
+<table class="table">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 87%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Create groups : <br> <code>groupadd --gid 4648 dbasfs</code> <br> <code>groupadd --gid 4649 sbasff</code> <br> <code>groupadd --gid 5998 db2_grp_sysadm</code> <br> <code>groupadd --gid 5999 db2_grp_sysctrl</code> <br> <code>groupadd --gid 6000 db2_grp_sysmaint</code> <br> <code>groupadd --gid 6001 db2_grp_sysmon</code> <br></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Create users : <br> <code>useradd --uid 10003 -g dbasfs -m -d /db2home/idsn idsn</code> <br> <code>useradd --uid 10004 -g sbasff -m -d /db2home/fdsn fdsn</code> <br> <code>usermod -a -G db2_grp_sysadm,db2_grp_sysctrl,db2_grp_sysmaint,db2_grp_sysmon idsn</code> <br> <code>chmod 755 /db2home/idsn</code> <br> <code>chmod 755 /db2home/fdsn</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="create-memberscf" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="create-memberscf"><span class="header-section-number">3.10</span> 11. Create Members/CF</h2>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Create first member and CF : <br> <code>export DB2TMPDIR=/opt/db2_installer/log</code> <br> <code>./db2icrt -d -m db2-1 -mnet db2-1-ib0 -cf db2-6 -cfnet db2-6-ib0 -instance_shared_dev /dev/dm-XX -instance_shared_mount /db2sd -tbdev inputas -u &lt;fenced&gt; &lt;inst&gt; \| tee  /opt/db2_installer/log/db2icrt_MEM0_CF128_db2-1_db2-6.log</code> <br> <strong>Note.:</strong> All the commands <strong>MUST</strong> be performed in a single server</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>List/Check file system/Disk: : <br> <code>/opt/ibm/db2/V11.5.9.0.SB46591/bin/db2cluster -cfs -list -filesystem</code> <br> <code>/opt/ibm/db2/V11.5.9.0.SB46591/bin/db2cluster -cfs -list -filesystem  &lt;fs_name&gt; -disk</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Check first member Member 0 and cf 128 : <br> <code>db2instance -list</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Add second CF 129 : <br> <code>./db2iupdt -d -add -cf db2-7 -cfnet db2-7-ib0 -u &lt;fenced&gt; &lt;inst&gt; \| tee /opt/db2_installer/log/db2icrt_CF129_db2-7.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Add Member 1 : <br> <code>./db2iupdt -d -add -m db2-2 -mnet db2-2-ib0 -u &lt;fenced&gt; &lt;inst&gt; \| tee /opt/db2_installer/log/db2icrt_MEM1_db2-2.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>Add Member 2 : <br> <code>./db2iupdt -d -add -m db2-3 -mnet db2-3-ib0 -u &lt;fenced&gt; &lt;inst&gt; \| tee /opt/db2_installer/log/db2icrt_MEM2_db2-3.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Add Member 3 : <br> <code>./db2iupdt -d -add -m db2-4 -mnet db2-4-ib0 -u &lt;fenced&gt; &lt;inst&gt; \| tee /opt/db2_installer/log/db2icrt_MEM3_db2-4.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>Add Member 4 : <br> <code>./db2iupdt -d -add -m db2-5 -mnet db2-5-ib0 -u &lt;fenced&gt; &lt;inst&gt; \| tee /opt/db2_installer/log/db2icrt_MEM4_db2-5.log</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Check members : <br> <code>db2instance -list</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>Verify that your Db2 database product is installed on all hosts: <br> <code>/usr/local/bin/db2ls</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>Check all /etc/hosts for “db2c_idsn 25012/tcp” line. : <br> <code>cat /etc/services \| grep -i db2c_idsn</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>Check all /db2sd/<inst>/sqllib_shared/db2nodes.cfg for hosts : <br> <code>cat /db2sd/&lt;inst&gt;/sqllib_shared/db2nodes.cfg</code></inst></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="dbm-db-and-registry-variable-config" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="dbm-db-and-registry-variable-config"><span class="header-section-number">3.11</span> 12. DBM , DB and Registry variable config</h2>
+<p>In this section we going to replicate the database, instance and registry variable on new cluster</p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Update dbm cfg - as <inst> – on any member to apply to all members : <br> <code>db2 update dbm cfg using NUMDB 3</code> <br><code>db2 update dbm cfg using FEDERATED YES</code> <br> <code>db2 update dbm cfg using CF_DIAGLEVEL 3</code> <br> <code>db2 update dbm cfg using ALT_DIAGPATH  '"/db2home/&lt;inst&gt;/sqllib/db2altdump/ $m"'</code> <br> <code>db2 update dbm cfg using DFT_MON_BUFPOOL ON</code> <br> <code>db2 update dbm cfg using DFT_MON_LOCK ON</code> <br> <code>db2 update dbm cfg using DFT_MON_STMT ON</code> <br> <code>db2 update dbm cfg using DFT_MON_TABLE ON</code> <br> <code>db2 update  dbm cfg using DFT_MON_TIMESTAMP ON</code> <br> <code>db2 update dbm cfg using DFT_MON_TIMESTAMP ON</code></inst></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Update db2 registry - as <inst> – on any member to set all members : <br> <code>db2set DB2_SD_DISABLE_GLOBAL_FSCR_SEARCH=TRUE</code> <br> <code>db2set DB2_INDEX_CREATE_ALLOW_WRITE=OFF</code> <br> <code>db2set DB2_ENABLE_PS_EXTENT_RECLAIM=ON</code> <br> <code>db2set DB2_SD_ALLOW_SLOW_NETWORK=OFF</code> <br> <code>db2set DB2_CF_STMM_RESIZE_TIMEOUT=40</code> <br> <code>db2set DB2_CPU_BINDING=NUM_CORES=4</code> <br> <code>db2set DB2_CA_ENV_STRING=CF_LWD_NUM_WORKERS=16,CF_LWD_QUEUE_SIZE=1024</code> <br> <code>db2set DB2_PMODEL_SETTINGS=PANIC_ON_FORCE_DBSHUTDOWN:TRUE</code> <br> <code>db2set DB2_ATS_ENABLE=YES</code> <br> <code>db2set DB2_USE_FAST_PREALLOCATION=ON</code> <br> <code>db2set DB2RSHCMD=/usr/bin/ssh</code> <br> <code>db2set DB2FODC=DUMPCORE=ON</code> <br> <code>db2set DB2AUTH=OSAUTHDB</code> <br> <code>db2set DB2MAXFSCRSEARCH=3</code> <br> <code>db2set DB2COMM=TCPIP</code> <br> <code>db2set DB2AUTOSTART=YES</code> <br> <code>db2set "DB2FODC=DUMPSHM=ON  CORESHM=OFF SERVICELEVEL=FULL DUMPDIR=/db2/work/DUMP/DB2/"</code> <br> <strong>NOTE.:</strong> Double check number of cores <code>lscpu</code></inst></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="add-file-systems-and-adjust-ownership" class="level2" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="add-file-systems-and-adjust-ownership"><span class="header-section-number">3.12</span> 13. Add File systems and adjust ownership</h2>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Create remaining shared file systems : <br> <code>/opt/ibm/db2/V11.5.9.0.SB_46591/bin/db2cluster -cfs -create -filesystem dba -disk /dev/dm-xx -mount XXXXX</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Adjust file system owner : <br> <code>chown &lt;inst&gt;:&lt;group&gt; /db2/dba</code> <br> <code>chown &lt;inst&gt;:&lt;group&gt; /db2/&lt;inst&gt;/db2dump</code> <br> <code>chown &lt;inst&gt;:&lt;group&gt; /db2/&lt;db_name&gt;/*</code> <br> <code>chmod 775 /db2/dba</code> <br> <code>chmod 755 /db2/&lt;inst&gt;/db2dump</code> <br> <code>chmod 740 /db2/&lt;db_name&gt;/&lt;db_name&gt;_data*</code> <br> <code>chmod 740 /db2/&lt;db_name&gt;/ &lt;br&gt; &lt;db_name&gt;_index*</code> <br> <code>chmod 740 /db2/&lt;db_name&gt;/temp*</code> <br> <code>chmod 740 /db2/&lt;db_name&gt;/log_*</code> <br> <code>chmod 740 /db2/&lt;db_name&gt;/dbbackup*</code> <br> <strong>Obs.::</strong> replace instance, group and file system names for each env</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Change group and ownership of file system <strong>as root</strong> : <br> <code>chown &lt;inst&gt;:&lt;group&gt; /db2</code> ; <br> <code>chown &lt;inst&gt;:&lt;group&gt;/db2/idsn;</code> <br> <code>chown &lt;inst&gt;:&lt;group&gt; /db2/dba;</code> <br> <code>chown &lt;inst&gt;:&lt;group&gt; /db2/&lt;db_name&gt;</code> <br> chown idns:dbasfs /db2/idns/db2dump/</td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Change diaglog path : <br> <code>db2 update dbm cfg using DIAGPATH     '"/db2/&lt;inst&gt;/db2dump/ $m"'</code> <br> <code>db2 update dbm cfg using CF_DIAGPATH  '"/db2/&lt;inst&gt;/db2dump/ $m"'</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Restart the instance : <br> <code>db2stop force</code> <br> <code>db2start</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="post-install" class="level2" data-number="3.13">
+<h2 data-number="3.13" class="anchored" data-anchor-id="post-install"><span class="header-section-number">3.13</span> 14. Post-Install</h2>
+<p>Ref.: <a href="https://www.ibm.com/docs/en/db2/11.5?topic=linux-performing-post-installation-tasks">Performing post-installation tasks for the Db2 pureScale Feature (Linux)</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th style="text-align: right;">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Basic verify : <br> <code>db2cluster -verify</code></td>
+<td style="text-align: right;"><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Verify RDMA ping : <br> <code>db2cluster -verify -req -rdma_ping</code> <br> <strong>Ob.:</strong> Logs on /tmp/</td>
+<td style="text-align: right;"><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>set host detection time: <br> <code>db2cluster -cm -list -hostfailuredetectiontime</code> <br> <code>db2cluster -cm -set -option HostFailureDetectionTime -value 4 -force</code></td>
+<td style="text-align: right;"><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Check GPFS State on all hosts <br> <code>/usr/lpp/mmfs/bin/mmgetstate -a</code></td>
+<td style="text-align: right;"><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Set the tiebreaker mode to <strong>“majority”</strong> <br> <code>db2cluster -cm -list -tiebreaker</code> <br> <code>./db2cluster -cm -set -tiebreaker -majority</code></td>
+<td style="text-align: right;"><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="config-s3" class="level2" data-number="3.14">
+<h2 data-number="3.14" class="anchored" data-anchor-id="config-s3"><span class="header-section-number">3.14</span> 15. Config S3</h2>
+<p>Section to configure S3</p>
+<ul>
+<li><strong>Pending definition</strong></li>
+</ul>
+<p><br></p>
+<p><br></p>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="configure-database-problem-determination-db2pdcfg" class="level2" data-number="3.15">
+<h2 data-number="3.15" class="anchored" data-anchor-id="configure-database-problem-determination-db2pdcfg"><span class="header-section-number">3.15</span> 16. Configure Database Problem Determination <code>db2pdcfg</code></h2>
+<p>Ref.: <a href="https://www.ibm.com/docs/en/db2/11.5?topic=commands-db2pdcfg-configure-db2-database-problem-determination-behavior">db2pdcfg - Configure Db2 database for problem determination behavior command</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 56%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Copy db2cos script : <br> <code>/db2home/idsn/sqllib/adm $ scp db2cos user@db2-1.fsc.customer.com:/tmp</code> <br> <code>cp /tmp/db2cos /db2/dba/db2cos</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Move script to sqllib/adm folder : <br> <code>cp /db2/dba/db2cos/db2cos /db2home/idns/sqllib/adm/</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+</section>
+<section id="configure-coredump" class="level2" data-number="3.16">
+<h2 data-number="3.16" class="anchored" data-anchor-id="configure-coredump"><span class="header-section-number">3.16</span> 17. Configure Coredump</h2>
+<p>Ref.: <a href="hhttps://access.redhat.com/solutions/4896#:~:text=To%20disallow%20users%20of%20the%20system%20to%20be">How to enable core file dumps when an application crashes or segmentation faults</a></p>
+<table class="table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 77%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Description</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Create DUMP dir structure <br> OS : <code>/db2/work/DUMP/OS/db2-{1..7}</code> <br> Db2: <code>/db2/work/DUMP/DB2/db2-{1..7}</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Configure unlimit for <strong>root</strong> : <br> <code>ulimit -c unlimited</code></td>
+<td><span style="color:green"><em>Done</em></span></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><br></p>
+<p><br></p>
+<p><br></p>
+
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -1,7 +1,551 @@
-# Summary
+# Db2 pureScale build
 
-In summary, this book has no content whatsoever.
 
-```{r}
-1 + 1
-```
+
+
+
+# About this doc
+
+
+This document will describe the steps perform to install LAB pureScale database.
+
+
+> The oficial IBM document is [Installing a Db2 pureScale environment (Linux)](https://www.ibm.com/docs/en/db2/11.5?topic=environment-installing-db2-purescale-linux), this document does not have the objective to replace the official IBM document, it
+ was created to help DBAs perofrm the install, any doublt please check the official documentation.
+
+
+There are also sample of commands that contains names to better understand the command, make sure to replace any special setting on the environment that you are working on.
+
+
+
+
+<br>
+
+<br>
+
+
+## Table of Contents
+
+
+1. [ lessons learned](#1-lessons-learned)
+
+2. [ Pre-installation check list](#5-pre-installation-check-list)
+
+3. [ Db2 check list before install](#6-db2-check-list-before-install)
+
+4. [ Kernel params](#7-kernel-params)
+
+5. [ Db2, TSAMP and GPFS ](#8-db2-tsmp-and-gpfs-install)
+
+6. [ Apply Db2 and TSAMP license](#9-apply-db2-and-tsamp-license)
+
+7. [ Db2 user and groups creation](#10-db2-user-and-fenced-creation)
+
+8. [ create members cf](#11-create-memberscf)
+
+9. [ DBM, dB and Registry variable config](#12-dbm--db-and-registry-variable-config)
+
+10. [ File ssytem and ownership adjust ](#13-add-file-systems-and-adjust-ownership)
+
+14. [ Post install](#14-post-install)
+
+11. [ Config-s3](#15-config-s3)
+
+12. [ Configure database problem determination db2pdcfg](#16-configure-database-problem-determination-db2pdcfg)
+
+13. [ Configure coredump](#17-configure-coredump)
+
+14. [Check and Configure DBMS param ](#18-check-and-configure-dbms-parameters)
+
+15. [HADR configuration and sync ](#19-hadr-config-and-sync)
+
+16. [Backout step](#20-backout-steps)
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+
+## 1. Lessons Learned 
+
+
+*  Kernel version *5.14.0-284.**75.1.el9_2**  is not supported need to be 5.14.0-284.**30.1.el9_2** , if server was delivered with kernel version
+**75.1.el9_2**  below is the steps to fix : 
+
+    ```
+
+    #sudo yum install kernel-5.14.0-284.30.1.el9_2 kernel-headers-5.14.0-284.30.1.el9_2 kernel-devel-5.14.0-284.30.1.el9_2
+
+    
+
+    #sudo reboot
+
+    
+
+    #sudo yum autoremove kernel-5.14.0-284.75.1.el9_2.x86_64 kernel-devel-5.14.0-284.75.1.el9_2.x86_64 kernel-modules-5.14.0-284.75.1.el9_2.x86_64 kernel-tools-5.14.0-284.75.1.el9_2.x86_64 kernel-core-5.14.0-284.75.1.el9_2.x86_64
+
+
+    ```
+
+
+* Do not use virtualized RDMA
+
+
+* If need two databases as HADR make sure to include the correct HADR port for the second database
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>    
+
+
+
+
+
+
+## 4. Disks definition
+
+
+In this section we going to save the disk definition, all the activities **MUST** be performed in a single server, if you get the /dev/dm-xx information from server A, it can be different from server B, also if the server reboot the numbers will change,
+ this information going to be used to add the file system, so before add new file system need to re-map all the DMs
+
+
+
+Commands : 
+
+
+* `lsblk -a -o NAME,KNAME,SIZE,WWN`
+
+* `multipath -l`
+
+* `lsscsi`   
+
+
+
+
+### OS
+
+
+
+
+| ID       | Device   | Size       |   Mount point                |  DM   |  File system |
+|----------|-------------|---------|-----------------------------|-------| ------------  |
+| [0:0:0:0]  |   /dev/sdc  |  300G   | - 4G SWAP <br> - 50G / <br> - 50G /opt <br> - 1G /home <br> - 25G /opt/ibm/db2 <br> - 20G /db2home  |    |
+
+
+
+
+
+
+### GPFS
+
+
+| FILE SYSTEM NAME                  |                MOUNT POINT           |  Size    |
+|-----------------------------------|--------------------------------------|----------|
+| db2dump                           |     /db2/idns/db2dump                |    2T    |
+| db2fs1                            |     /db2sd                           |    1T    |
+| dba                               |     /db2/dba                         |    1T    |
+| dbbackup1                         |     /db2/dbdns/dbbackup1             |    1T    |
+| dbbackup2                         |     /db2/dbdns/dbbackup2             |    1T    |
+| dbbackup3                         |     /db2/dbdns/dbbackup3             |    1T    |
+| dbbackup4                         |     /db2/dbdns/dbbackup4             |    1T    |
+| dbbackup5                         |     /db2/dbdns/dbbackup5             |    1T    |
+| dbbackup6                         |     /db2/dbdns/dbbackup6             |    1T    |
+| dbdns_data0                       |     /db2/dbdns/dbdns_data0           |    1T    |
+| dbdns_data1                       |     /db2/dbdns/dbdns_data1           |    1T    |
+| dbdns_index0                      |     /db2/dbdns/dbdns_index0          |    1T    |
+| dbdns_index1                      |     /db2/dbdns/dbdns_index1          |    1T    |
+| dbdns_temp                        |     /db2/dbdns/dbdns_temp            |    5T    |
+| log_act_mirror                    |     /db2/dbdns/log_act_mirror        |    1T    |
+| log_active                        |     /db2/dbdns/log_active            |    1T    |
+| log_archive                       |     /db2/dbdns/log_archive           |    1T    |
+| scripts                           |     /db2/scripts                     |    1T    |
+| work                              |     /db2/work                        |    1T    |
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+## 5. Pre-Installation check list
+
+
+Ref. : 
+
+[Preinstallation checklist for Db2 pureScale Feature (Linux)](https://www.ibm.com/docs/en/db2/11.5?topic=linux-preinstallation-checklist-db2-purescale-feature)
+
+
+
+|Item  | Description                                                     | Status                                  |
+|------|-----------------------------------------------------------------|-------------------------------------------|
+|  1   | All hosts must use the same Linux® distribution:  9.2 (Plow)    |  <span style="color:green">_Done_</span>  |
+|  2   | Check/validate RDMA  <br> `On db2-1 run "rping -v -s" and on  db2-2 run "rping -v -c -a 192.168.242.7"`  <br> **Obs.:** _db2prereqcheck will also validate this step_              |  <span style="color:green">_Done_</span>  |
+|  3   | Check `log_mtts_per_seg` on CF <br> **obs.:** _According linux we are using DX-6 cards not need_                |  <span style="color:green">_Done_</span>  |
+|  4   | Check Libs : <br> `ls -ld /usr/lib/libstdc++.so.6`  <br> `ls -ld /usr/lib64/libstdc++.so.6*` <br> **Obs.:** _If not installed will be installed with packages on next section_                 |  <span style="color:green">_Done_</span>  |
+|  5   | Check OpenSSD : <br> `sudo systemctl status sshd`                 |  <span style="color:green">_Done_</span>  |
+|  6   | Validate SSH between hosts (root) <br> **Obs.:** _db2prereqcheck will also validate this step_                |  <span style="color:green">_Done_</span>  |
+|  7   | List and document devices/disks:  <br>  `lsscsi`                 |  <span style="color:green">_Done_</span>  |
+|  8   | List multpath <br> `multipath -l`                 |  <span style="color:green">_Done_</span>  |
+|  9   | Check Network Adapters installed on all servers : <br> `netstat -i`                |  <span style="color:green">_Done_</span>  |
+|  10  | Check: /tmp, / , /home, /db2home, /var                  |  <span style="color:green">_Done_</span>  |
+|  11  | Check ulimit file system and umask 022 for root :  <br> `id root; ulimit -f; umask`                 |  <span style="color:green">_Done_</span>  |
+|  12  | Check instance and fenced userid and groups                 |  <span style="color:green">_Done_</span>  |
+|  13  | Check Kernel setting on WTC and validate on new server                |  <span style="color:green">_Done_</span>  |
+| 14   | Check DMs and disks `lsblk -a -o NAME,KNAME,SIZE,WWN` |  <span style="color:green">_Done_</span>  |
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+## 6. Db2 check list before install
+
+
+Ref.: [Installing Db2 pureScale Feature using the db2_install command](https://www.ibm.com/docs/en/db2/11.5?topic=idpel-installing-db2-purescale-feature-using-db2-install-command)
+
+
+
+
+|Item  | Description                                                     | Status                                  |
+|------|-----------------------------------------------------------------|-------------------------------------------|
+|  1   | Send db2 binary to server  <br> `scp special_46591_v11.5.9_linuxx64_universal_fixpack.tar.gz`  user@db2-2.fsc.customer.com:/tmp                           |  <span style="color:green">_Done_</span>  |
+|  2   | Create install and log dir : <br>  `mkdir -p /opt/db2_installer/log` <br> `mkdir -p /opt/db2_installer` <br> `mkdir -p /opt/db2_installer/license` |  <span style="color:green">_Done_</span>  |
+|  3   | Copy file to db2_installer path : <br>  `cp /tmp/special_46591_v11.5.9_linuxx64_universal_fixpack.tar.gz /opt/db2_installer`                                             |  <span style="color:green">_Done_</span>  |
+|  4   | Extract bin : <br> `sudo gunzip -c special_46591_v11.5.9_linuxx64_universal_fixpack.tar.gz \| sudo tar -pxvf -`|  <span style="color:green">_Done_</span>  |
+|  5   | Install libs : <br> `yum install -y libstdc++.i686 libstdc++ libstdc++-devel.i686 libstdc++-devel pam-devel pam-devel.i686 gcc cpp gcc-c++ kernel-devel NetworkManager-config-server perl mksh "compat-openssl*" kernel-modules-extra `             |  <span
+ style="color:green">_Done_</span>  |
+|  6   | Run basic check : <br> `db2prereqcheck -p -v 11.5.9.0 -o /opt/db2_installer/log/db2prereqcheck_baisc_report_$HOSTNAME.out `             |  <span style="color:green">_Done_</span>  |
+|  7   | Run basic precheck all hosts : <br>`db2prereqcheck -p -v 11.5.9.0 -hl db2-1,db2-2,db2-3,db2-4,db2-5,db2-6,db2-7 -o /opt/db2_installer/log/db2prereqcheck_report_ALL_$HOSTNAME.out`                               |  <span style="color:green">_Done_</span>
+  |
+|  8   | Run ping tests : <br> `db2prereqcheck -p -v 11.5.9.0 -nm db2-1-ib0,db2-2-ib0,db2-3-ib0,db2-4-ib0,db2-5-ib0,db2-6-ib0,db2-7-ib0   -o /opt/db2_installer/log/db2prereqcheck_report_Ping_tests_$HOSTNAME.out ` <br> **Obs:** _The Warning DBT3588W is not applicable_ |  <span style="color:green">_Done_</span>  |
+|  9   | Run complete pre-check : <br> ` db2prereqcheck -p -v 11.5.9.0   -hl db2-1,db2-2,db2-3,db2-4,db2-5,db2-6,db2-7 -nm db2-1-ib0,db2-2-ib0,db2-3-ib0,db2-4-ib0,db2-5-ib0,db2-6-ib0,db2-7-ib0   -o /opt/db2_installer/log/db2prereqcheck_report_Complete_$HOSTNAME.out`   <br> **Note:** _The Warning DBT3588W is not applicable_  |  <span style="color:green">_Done_</span>  |
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+## 7. Kernel params
+
+
+
+The kernel parameters are documented on [Kernel parameter requirements (Linux)
+
+](https://www.ibm.com/docs/en/db2/11.5?topic=unix-kernel-parameter-requirements-linux), the new servers should be created with the proper config, if need to change or set please check #3.
+
+
+Optional command `ipcs -l`
+
+
+
+|Item  | Description | Status |
+|------|-----------------------------------------------------------------------------------------------------|--------|
+|  1   | Validate the purescale kernel config file `vim /etc/sysctl.d/purescale.conf` and add : <br> `#https://www.ibm.com/docs/en/db2/11.5?topic=unix-kernel-parameter-requirements-linux` <br> `#Kernel setting for db2 pureScale environment` <br> `kernel.shmmni = 32768` <br> `kernel.msgmni = 32768` <br> `kernel.sem = 250 32000 32 32768` <br> `vm.swappiness = 5` <br> `vm.force_cgroup_v2_swappiness = 1` <br> `kernel.core_pattern=/db2/work/DUMP/OS/db2-1/core_%e_%p_%h_%t` <br>  `fs.suid_dumpable=2` <br>|  <span style="color:green">_Done_</span>   |
+| 2    |  Check the paramters :  <br> `sysctl -a \| egrep -i 'mni\|sem ' `  |<span style="color:green">_Done_</span> |
+| 3    |  If need to change or add the command to activate the kernel is :  <br> `sysctl -p /etc/sysctl.d/purescale.conf ` <br> `reboot` |<span style="color:green">_NA_</span> | 
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+## 8. Db2, TSMP and GPFS install
+
+
+
+|Item  | Description                                                      | Status                                    |
+|-------|-----------------------------------------------------------------|-------------------------------------------|
+|  1   | Run db2_install : <br>  `db2_install -b /opt/ibm/db2/V11.5.9.0.SB46591 -f PURESCALE -p SERVER -f NOPCMK -t /opt/db2_installer/log/db2_install.trc -l /opt/db2_installer/log/db2_install.log` |  <span style="color:green">_Done_</span>  |
+|  2   | run db2 install validation : <br> `db2val -o -t /opt/db2_installer/log/trace_db2val.trc -l /opt/db2_installer/log/trace_db2val.log`                          |  <span style="color:green">_Done_</span>  |
+|  3   | Check TSAMP install : <br> `rpm -aq \| grep -e "sam\." -e "sam\-"`                            |  <span style="color:green">_Done_</span>  |
+|  4   | Check GPFS install :  : <br> `rpm -aq \| grep gpfs`                             |  <span style="color:green">_Done_</span>  |
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+## 9. Apply Db2 and TSAMP license
+
+
+
+|Item  | Description                                                      | Status                                    |
+|-------|-----------------------------------------------------------------|-------------------------------------------|
+|  1   | Sent license files to servers  : <br> `/db2/dba/license $ scp *.lic user@db2-4.fsc.customer.com:/opt/db2_installer/license` |  <span style="color:green">_Done_</span>  |
+|  2   | Apply Db2 license - **as instance** -- must apply to each host : <br> `db2licm -a /opt/db2_installer/license/db2aese_c.lic` |  <span style="color:green">_Done_</span>  |
+|  3   | Apply TSAMP license - **as root** : <br> `/usr/bin/samlicm -i /opt/db2_installer/license/sam41.lic` |  <span style="color:green">_Done_</span>  |
+|  4   | Validate db2 , TSAMP and GPFS lic : <br> **Db2** :  `db2licm -l` <br> **GPFS** :  `/usr/lpp/mmfs/bin/mmlslicense -L` <br> **TSAMP** :`samlicm -s` |  <span style="color:green">_Done_</span>  |
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+## 10. Db2 user and fenced creation
+
+
+In this section we going to create, user ids and gorups, you **have** to make sure the same config on WTC going to be replicate to CoLo, i.e, user and group names, user and group IDs.
+
+
+
+|Item  | Description                                                                                         | Status |
+|------|-----------------------------------------------------------------------------------------------------|--------|
+|  1   |  Create groups : <br> `groupadd --gid 4648 dbasfs` <br> `groupadd --gid 4649 sbasff` <br> `groupadd --gid 5998 db2_grp_sysadm` <br> `groupadd --gid 5999 db2_grp_sysctrl` <br> `groupadd --gid 6000 db2_grp_sysmaint` <br> `groupadd --gid 6001 db2_grp_sysmon`  <br> | <span style="color:green">_Done_</span>
+|  2   |  Create users :  <br> `useradd --uid 10003 -g dbasfs -m -d /db2home/idsn idsn` <br> `useradd --uid 10004 -g sbasff -m -d /db2home/fdsn fdsn` <br> `usermod -a -G db2_grp_sysadm,db2_grp_sysctrl,db2_grp_sysmaint,db2_grp_sysmon idsn` <br> `chmod 755 /db2home/idsn`  <br> `chmod 755 /db2home/fdsn` |<span style="color:green">_Done_</span> |
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+## 11. Create Members/CF
+
+
+
+|Item  | Description | Status                                    |
+|-------|-----------------------------------------------------------------|-------------------------------------------|
+|  1   | Create first member and CF : <br> `export DB2TMPDIR=/opt/db2_installer/log` <br> `./db2icrt -d -m db2-1 -mnet db2-1-ib0 -cf db2-6 -cfnet db2-6-ib0 -instance_shared_dev /dev/dm-XX -instance_shared_mount /db2sd -tbdev inputas -u <fenced> <inst> \| tee
+ /opt/db2_installer/log/db2icrt_MEM0_CF128_db2-1_db2-6.log` <br> **Note.:** All the commands **MUST** be performed in a single server |  <span style="color:green">_Done_</span>  |
+|  2   | List/Check file system/Disk: : <br> `/opt/ibm/db2/V11.5.9.0.SB46591/bin/db2cluster -cfs -list -filesystem` <br> `/opt/ibm/db2/V11.5.9.0.SB46591/bin/db2cluster -cfs -list -filesystem  <fs_name> -disk `|  <span style="color:green">_Done_</span>
+  |
+|  3   | Check first member Member 0 and cf 128 : <br> `db2instance -list` |  <span style="color:green">_Done_</span>  |
+|  4   | Add second CF 129 : <br> `./db2iupdt -d -add -cf db2-7 -cfnet db2-7-ib0 -u <fenced> <inst> \| tee /opt/db2_installer/log/db2icrt_CF129_db2-7.log`|  <span style="color:green">_Done_</span>  |
+|  6   | Add Member 1 : <br> `./db2iupdt -d -add -m db2-2 -mnet db2-2-ib0 -u <fenced> <inst> \| tee /opt/db2_installer/log/db2icrt_MEM1_db2-2.log` |  <span style="color:green">_Done_</span>  |
+|  8   | Add Member 2 : <br> `./db2iupdt -d -add -m db2-3 -mnet db2-3-ib0 -u <fenced> <inst> \| tee /opt/db2_installer/log/db2icrt_MEM2_db2-3.log`|  <span style="color:green">_Done_</span>  |
+|  10   | Add Member 3 : <br> `./db2iupdt -d -add -m db2-4 -mnet db2-4-ib0 -u <fenced> <inst> \| tee /opt/db2_installer/log/db2icrt_MEM3_db2-4.log`|  <span style="color:green">_Done_</span>  |
+|  12   | Add Member 4 : <br> `./db2iupdt -d -add -m db2-5 -mnet db2-5-ib0 -u <fenced> <inst> \| tee /opt/db2_installer/log/db2icrt_MEM4_db2-5.log` |  <span style="color:green">_Done_</span>  |
+|  12   | Check members : <br> `db2instance -list` |  <span style="color:green">_Done_</span>  |
+|  14   | Verify that your Db2 database product is installed on all  hosts: <br> `/usr/local/bin/db2ls`                             |  <span style="color:green">_Done_</span>  |
+|  15   | Check all /etc/hosts for "db2c_idsn       25012/tcp" line.  : <br> `cat /etc/services \| grep -i db2c_idsn` |  <span style="color:green">_Done_</span>  |
+|  16   | Check all /db2sd/<inst>/sqllib_shared/db2nodes.cfg for hosts : <br> `cat /db2sd/<inst>/sqllib_shared/db2nodes.cfg` |  <span style="color:green">_Done_</span>  |
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+## 12. DBM ,  DB  and Registry variable config
+
+
+In this section we going to replicate the database, instance and registry variable on new cluster
+
+
+|Item  | Description   | Status |
+|-------|-----------------------------------------------------------------|-------------------------------------------|
+|  1  | Update dbm cfg - as <inst> -- on any member to apply to all members : <br> `db2 update dbm cfg using NUMDB 3`  <br>`db2 update dbm cfg using FEDERATED YES` <br>  `db2 update dbm cfg using CF_DIAGLEVEL 3` <br>  `db2 update dbm cfg using ALT_DIAGPATH
+ '"/db2home/<inst>/sqllib/db2altdump/ $m"'` <br>  `db2 update dbm cfg using DFT_MON_BUFPOOL ON` <br>  `db2 update dbm cfg using DFT_MON_LOCK ON` <br>  `db2 update dbm cfg using DFT_MON_STMT ON` <br>  `db2 update dbm cfg using DFT_MON_TABLE ON` <br>  `db2 update
+ dbm cfg using DFT_MON_TIMESTAMP ON` <br>  `db2 update dbm cfg using DFT_MON_TIMESTAMP ON`   |  <span style="color:green">_Done_</span>  |
+|  2  | Update db2 registry - as <inst> -- on any member to set all members : <br> `db2set DB2_SD_DISABLE_GLOBAL_FSCR_SEARCH=TRUE` <br> `db2set DB2_INDEX_CREATE_ALLOW_WRITE=OFF` <br> `db2set DB2_ENABLE_PS_EXTENT_RECLAIM=ON` <br> `db2set DB2_SD_ALLOW_SLOW_NETWORK=OFF` <br> `db2set DB2_CF_STMM_RESIZE_TIMEOUT=40` <br> `db2set DB2_CPU_BINDING=NUM_CORES=4` <br> `db2set DB2_CA_ENV_STRING=CF_LWD_NUM_WORKERS=16,CF_LWD_QUEUE_SIZE=1024` <br> `db2set DB2_PMODEL_SETTINGS=PANIC_ON_FORCE_DBSHUTDOWN:TRUE` <br> `db2set DB2_ATS_ENABLE=YES` <br> `db2set DB2_USE_FAST_PREALLOCATION=ON` <br> `db2set DB2RSHCMD=/usr/bin/ssh` <br> `db2set DB2FODC=DUMPCORE=ON` <br> `db2set DB2AUTH=OSAUTHDB` <br> `db2set DB2MAXFSCRSEARCH=3` <br> `db2set DB2COMM=TCPIP` <br> `db2set DB2AUTOSTART=YES` <br> `db2set "DB2FODC=DUMPSHM=ON  CORESHM=OFF SERVICELEVEL=FULL DUMPDIR=/db2/work/DUMP/DB2/"` <br> **NOTE.:** Double check number of cores `lscpu` |  <span style="color:green">_Done_</span>  |
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+## 13. Add File systems and adjust ownership
+
+|Item  | Description                                                      | Status                                    |
+|-------|-----------------------------------------------------------------|-------------------------------------------|
+|  1   | Create remaining shared file systems : <br> `/opt/ibm/db2/V11.5.9.0.SB_46591/bin/db2cluster -cfs -create -filesystem dba -disk /dev/dm-xx -mount XXXXX` |  <span style="color:green">_Done_</span>  |
+|  2   | Adjust file system owner : <br> `chown <inst>:<group> /db2/dba ` <br> `chown <inst>:<group> /db2/<inst>/db2dump ` <br>  `chown <inst>:<group> /db2/<db_name>/* ` <br> `chmod 775 /db2/dba ` <br> `chmod 755 /db2/<inst>/db2dump ` <br>  `chmod 740 /db2/<db_name>/<db_name>_data*
+  ` <br> `chmod 740 /db2/<db_name>/ <br> <db_name>_index* ` <br> `chmod 740 /db2/<db_name>/temp* ` <br> `chmod 740 /db2/<db_name>/log_* ` <br> `chmod 740 /db2/<db_name>/dbbackup* ` <br> **Obs.::** replace instance, group and file system names for each env |  <span style="color:green">_Done_</span>  |
+|  3   | Change group and ownership of file system **as root** : <br> `chown <inst>:<group> /db2` ; <br> `chown <inst>:<group>/db2/idsn;` <br> ` chown <inst>:<group> /db2/dba;` <br> ` chown <inst>:<group> /db2/<db_name>` <br> chown idns:dbasfs /db2/idns/db2dump/  |  <span style="color:green">_Done_</span>  |
+|  4  | Change diaglog path : <br> `db2 update dbm cfg using DIAGPATH     '"/db2/<inst>/db2dump/ $m"'` <br> `db2 update dbm cfg using CF_DIAGPATH  '"/db2/<inst>/db2dump/ $m"'` |  <span style="color:green">_Done_</span>  |
+|  5   | Restart the instance : <br> `db2stop force` <br> `db2start` |  <span style="color:green">_Done_</span>  |
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+## 14. Post-Install
+
+
+Ref.: [Performing post-installation tasks for the Db2 pureScale Feature (Linux)](https://www.ibm.com/docs/en/db2/11.5?topic=linux-performing-post-installation-tasks)
+
+
+
+|Item   | Description| Status|
+|-------|-----------------------------------------------------------------|-------------------------------------------:|
+|  1   | Basic verify  : <br> `db2cluster -verify ` |  <span style="color:green">_Done_</span>  |
+|  2   | Verify RDMA ping : <br> `db2cluster -verify -req -rdma_ping `  <br> **Ob.:** Logs on /tmp/|  <span style="color:green">_Done_</span>  |
+|  3   | set host detection time: <br> `db2cluster -cm -list -hostfailuredetectiontime` <br> `db2cluster -cm -set -option HostFailureDetectionTime -value 4 -force` |  <span style="color:green">_Done_</span>  |
+|  4   | Check GPFS State on all hosts <br> `/usr/lpp/mmfs/bin/mmgetstate -a` |  <span style="color:green">_Done_</span>  |
+|  5   | Set the tiebreaker mode to **"majority"** <br> `db2cluster -cm -list -tiebreaker` <br>  `./db2cluster -cm -set -tiebreaker -majority` |  <span style="color:green">_Done_</span>  |
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+## 15. Config S3
+
+
+Section to configure S3 
+
+
+*  **Pending definition**
+
+
+<br>
+
+<br>
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+## 16. Configure Database Problem Determination `db2pdcfg` 
+
+
+Ref.: [db2pdcfg - Configure Db2 database for problem determination behavior command](https://www.ibm.com/docs/en/db2/11.5?topic=commands-db2pdcfg-configure-db2-database-problem-determination-behavior)
+
+
+
+|Item   | Description                                                      | Status                                   |
+|-------|-----------------------------------------------------------------|-------------------------------------------|
+|  1    | Copy db2cos script   : <br> ` /db2home/idsn/sqllib/adm $ scp db2cos user@db2-1.fsc.customer.com:/tmp` <br> `cp /tmp/db2cos /db2/dba/db2cos`  |  <span style="color:green">_Done_</span>  |
+|  2    | Move script to sqllib/adm folder : <br> ` cp /db2/dba/db2cos/db2cos /db2home/idns/sqllib/adm/`  |  <span style="color:green">_Done_</span>  |
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
+
+
+
+
+
+## 17. Configure Coredump   
+
+
+Ref.: [How to enable core file dumps when an application crashes or segmentation faults](hhttps://access.redhat.com/solutions/4896#:~:text=To%20disallow%20users%20of%20the%20system%20to%20be)
+
+
+
+|Item   | Description                                                     | Status  
+|-------|-----------------------------------------------------------------|------------|
+|  1    | Create DUMP dir structure  <br> OS : `/db2/work/DUMP/OS/db2-{1..7}` <br> Db2: `/db2/work/DUMP/DB2/db2-{1..7} `|  <span style="color:green">_Done_</span>  |
+|  2    | Configure unlimit for **root**  : <br> `ulimit -c unlimited` |  <span style="color:green">_Done_</span> |
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------
+
+<br>
+
+<br>
+
+<br>
